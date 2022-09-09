@@ -1,0 +1,88 @@
+commands
+docker images - check images
+docker ps - check running containers
+docker image rm {id} {id} {id} ... - remove one or more docker images
+docker container rm -f $(docker container ls -aq) - remove all of docker containers(remove containers first, then images)
+docker image rm $(docker image ls -q) - remove all of docker images
+docker-compose build --no-cache - build all images from docker-compose.services.build
+docker-compose up -d - run all containers from docker-compose
+docker-compose down - stop all containers from docker-compose
+docker exec -it -u root {containerid} sh - enter shell in specified docker, log in as root user
+watch -n 1 docker-compose ps - check container's status health
+
+ubuntu update docker:
+https://docs.docker.com/compose/install/linux/#install-the-plugin-manually
+copy it to CLI:
+curl -SL https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+
+
+simple structure
+
+main folder
+|
+|
+|- frontend
+|   |
+|   |- Dockerfile
+|   |
+|   |- rest files
+|
+|- backend
+|   |
+|   |- Dockerfile
+|   |
+|   |- rest files
+|
+|
+|- docker-compose.yml
+
+in services property you can name services as you want e.g.
+services:
+  frontend:
+  backend:
+  database:
+
+or
+
+services:
+  web:
+  api:
+  db:
+
+build/image:
+
+  web:
+    build: ./fronend # it's relative path to folder which contains Dockerfile, build property just build an image
+
+  db:
+    image: mongo:4.0-xenial # it's reference to existing image in dockerhub, it's second option to build an image, -xenial is version for linux less weight than
+
+port:
+
+  web:
+    ports:
+      - 3000:3000 #host(port declared in js file):docker container running this image
+
+enviroment: variables for service
+
+  api:
+    environment:
+      DB_URL: mongodb://db/example
+
+volumes:
+
+  db:
+    volumes:
+      - vidly:/data/db   # vidly is name of mongo db app(path to folder app), :/data/db is a docker path where this volume will be copied
+
+image_path:/your_docker_compose_path
+
+services:
+.
+.
+.
+volumes:
+  vidly:
+
+we should declare a volume if we want to use
+
